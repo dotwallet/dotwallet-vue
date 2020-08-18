@@ -53,7 +53,7 @@ export default {
       if (this.appId === '') console.warn('DotWallet Login button missing ap p ID');
       else if (this.redirectUrl === '') console.warn('DotWallet Login button missing redirect URL');
       else
-        window.location.href = `https://www.ddpurse.com/openapi/get_code?app_id=${this.appId}&redirect_uri=${this.redirectUrl}auth`;
+        window.location.href = `https://www.ddpurse.com/openapi/get_code?app_id=${this.appId}&redirect_uri=${this.redirectUrl}`;
     },
   },
 };

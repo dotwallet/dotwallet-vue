@@ -1,6 +1,6 @@
 {
   "name": "dotwallet-vue",
-  "version": "0.1.98",
+  "version": "0.1.99",
   "description": "Vue components to quickly integrate DotWallet functionality into an app",
   "author": "dotwallet team",
   "license": "MIT",
