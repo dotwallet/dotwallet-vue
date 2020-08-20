@@ -1,6 +1,6 @@
 {
   "name": "dotwallet-vue",
-  "version": "0.1.99",
+  "version": "0.2.0",
   "description": "Vue components to quickly integrate DotWallet functionality into an app",
   "author": "dotwallet team",
   "license": "MIT",
@@ -15,6 +15,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "uuid": "^8.3.0",
     "vue": "^2.6.11"
   },
   "browserslist": [
@@ -36,5 +37,4 @@
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
   }
-
 }

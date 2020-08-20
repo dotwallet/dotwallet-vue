@@ -11,34 +11,28 @@
 </template>
 
 <script>
-import Vue from 'vue';
 export default {
   name: 'dotwallet-login',
   props: {
     lang: {
       type: String,
       default: 'en',
-      validator(x) {
-        return ['en', 'zh'].indexOf(x) !== -1;
-      },
+      validator: lang => ['en', 'zh'].indexOf(lang) !== -1,
     },
     appId: {
       type: String,
       default: '',
+      validator: id => id.length === 32,
     },
     redirectUrl: {
       type: String,
       default: '',
+      validator: url => url.includes('http://') || url.includes('https://'),
     },
     customClass: {
-      type: String | null,
-      default: null,
+      type: String | undefined,
+      default: undefined,
     },
-  },
-  data() {
-    return {
-      mousedown: false,
-    };
   },
   computed: {
     imgSrc() {
@@ -50,10 +44,7 @@ export default {
   },
   methods: {
     openLink: function() {
-      if (this.appId === '') console.warn('DotWallet Login button missing ap p ID');
-      else if (this.redirectUrl === '') console.warn('DotWallet Login button missing redirect URL');
-      else
-        window.location.href = `https://www.ddpurse.com/openapi/get_code?app_id=${this.appId}&redirect_uri=${this.redirectUrl}`;
+      window.location.href = `https://www.ddpurse.com/openapi/get_code?app_id=${this.appId}&redirect_uri=${this.redirectUrl}`;
     },
   },
 };
