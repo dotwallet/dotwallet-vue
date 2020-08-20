@@ -4,14 +4,16 @@ import _vue from 'vue';
 
 const components = [Login, Pay];
 
-for (const component of components) {
-  component.install = Vue => {
-    if (!Vue) {
-      window.Vue = Vue = _vue;
+export default {
+  install(Vue) {
+    for (const component of components) {
+      if (!Vue) {
+        window.Vue = Vue = _vue;
+      }
+      Vue.component(component.name, component);
     }
-    Vue.component(component.name, component);
-  };
-}
+  },
+};
 
 // Login.install = Vue => {
 //   if (!Vue) {

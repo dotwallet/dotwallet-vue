@@ -27,6 +27,7 @@ export default {
 ```
 
 ```html
+<!-- Login button -->
 <dotwallet-login
   lang="zh"
   app-id="89d0032043842644fdb4fb14099ff6be5"
@@ -34,12 +35,38 @@ export default {
   custom-class="my-override-class"
 >
 </dotwallet-login>
+
 <style>
   /* will override the default hover and active effects as well */
   .my-override-class {
     box-shadow: 0 0 10px green;
   }
 </style>
+
+<!-- Payment button -->
+<!-- Required fields -->
+<dotwallet-pay
+  lang="en"
+  app-id="89d001043806644fdb4fb14099ff6be5"
+  redirect-url="http://192.168.1.142:8080/payment-success"
+  item-name="bananas"
+  order-amount="900"
+  api-endpoint="http://192.168.1.142:3000/create-order"
+></dotwallet-pay>
+<!-- with optional fields -->
+<dotwallet-pay
+  lang="en"
+  app-id="89d001043806644fdb4fb14099ff6be5"
+  redirect-url="http://192.168.1.142:8080/payment-success"
+  custom-class="my-override-class"
+  item-name="bananas"
+  order-amount="900"
+  api-endpoint="http://192.168.1.142:3000/create-order"
+  notice-uri="http://192.168.1.142:3000/payment-result"
+  :fetch-headers="{ 'API-Key': 'secret' }"
+  :fetch-options="{ credentials: 'same-origin' }"
+  :log="true"
+></dotwallet-pay>
 ```
 
 ## to dev
