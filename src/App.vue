@@ -17,18 +17,48 @@
       :fetch-headers="{ 'API-Key': 'secret' }"
       :fetch-options="{ credentials: 'same-origin' }"
       :log="true"
+      @succes="handleSuccess"
+      @fail="handleFail"
     ></dotwallet-pay>
+    <dotwallet-autopay
+      lang="en"
+      app-id="89d001043806644fdb4fb14099ff6be5"
+      user-open-id="47ff7d23ba6f06703e29347da4889e5b"
+      item-name="bananas"
+      order-amount="900"
+      duration="2"
+      api-endpoint="http://192.168.1.142:3000/create-autopayment"
+      :fetch-headers="{ 'API-Key': 'secret' }"
+      :fetch-options="{ credentials: 'same-origin' }"
+      :log="true"
+      @status="handleStatusChange"
+      @succes="handleSuccess"
+      @fail="handleFail"
+    ></dotwallet-autopay>
   </div>
 </template>
 
 <script>
 import Login from './components/Login';
 import Pay from './components/Pay';
+import AutoPay from './components/AutoPay';
 export default {
   name: 'app',
   components: {
     DotwalletLogin: Login,
     DotwalletPay: Pay,
+    DotwalletAutopay: AutoPay,
+  },
+  methods: {
+    handleStatusChange(status) {
+      console.log('status', status);
+    },
+    handleSuccess(msg) {
+      console.log('handleSuccess', msg);
+    },
+    handleFail(err) {
+      console.log('handleFail', err);
+    },
   },
 };
 </script>

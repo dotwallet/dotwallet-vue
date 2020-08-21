@@ -50,7 +50,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .dot-wallet-login-wrapper {
   width: max-content;
 }

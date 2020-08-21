@@ -1,19 +1,22 @@
 <template>
-  <div @click="pay()" class="dot-wallet-pay-wrapper">
-    <slot>
-      <img
-        :class="customClass ? customClass : 'dot-wallet-pay-button'"
-        :src="imgSrc"
-        alt="DotWallet Pay"
-      />
-    </slot>
+  <div class="dot-wallet-autopay-wrapper">
+    <longpress @status="statusChange" :duration="parseInt(duration, 10)" :on-confirm="pay">
+      <slot>
+        <img
+          :class="customClass ? customClass : ['autopay-button', status]"
+          :src="imgSrc"
+          alt="DotWallet Pay"
+        />
+      </slot>
+    </longpress>
   </div>
 </template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
+import Longpress from '../helpers/long-press';
 export default {
-  name: 'dotwallet-pay',
+  name: 'dotwallet-autopay',
   props: {
     lang: {
       type: String,
@@ -28,9 +31,14 @@ export default {
     orderAmount: {
       type: String,
       default: 0,
-      validator: amt => parseInt(amt, 10) > 546,
+      validator: amt => parseInt(amt, 10) > 700,
     },
     appId: {
+      type: String,
+      default: '',
+      validator: id => id.length === 32,
+    },
+    userOpenId: {
       type: String,
       default: '',
       validator: id => id.length === 32,
@@ -39,19 +47,15 @@ export default {
       type: String | undefined,
       default: undefined,
     },
-    noticeUri: {
-      type: String | undefined,
-      default: undefined,
-    },
-    redirectUrl: {
-      type: String,
-      default: '',
-      validator: url => url.includes('http://') || url.includes('https://'),
-    },
     apiEndpoint: {
       type: String,
       default: '',
       validator: url => url.includes('http://') || url.includes('https://'),
+    },
+    duration: {
+      type: String,
+      default: 0,
+      validator: amt => 0 <= parseInt(amt, 10) < 11,
     },
     fetchHeaders: {
       type: Object | undefined,
@@ -66,7 +70,7 @@ export default {
   },
   data() {
     return {
-      mousedown: false,
+      status: 'default',
     };
   },
   computed: {
@@ -77,16 +81,19 @@ export default {
         return 'https://gateway.pinata.cloud/ipfs/QmSxsQNXCRymA3KKyVheL3dRsz3FE24DC6vRFy3QgXKhKF';
     },
   },
+  components: { Longpress },
   methods: {
+    statusChange(payload) {
+      this.$emit('status', payload);
+      this.status = payload;
+    },
     pay() {
       const orderData = {
         app_id: this.appId,
         merchant_order_sn: uuidv4(),
         item_name: this.itemName,
-        order_amount: parseInt(this.orderAmount, 10),
-        nonce_str: new Date().toString(),
-        redirect_uri: this.redirectUrl,
-        notice_uri: this.noticeUri,
+        pre_amount: parseInt(this.orderAmount, 10),
+        user_open_id: this.userOpenId,
       };
       if (this.log) console.log('order data', orderData);
       const options = {
@@ -108,18 +115,17 @@ export default {
       if (this.log) console.log('fetch options', options);
 
       fetch(this.apiEndpoint, options)
-        .then(orderSnResponse => orderSnResponse.json())
-        .then(orderSnData => {
-          if (this.log) console.log('order response data', orderSnData);
-          if (orderSnData.order_sn) {
-            window.location.href = `https://www.ddpurse.com/desktop/open/order?order_sn=${orderSnData.order_sn}`;
-            this.$emit('success', orderSnData);
+        .then(autoPaymentResponse => autoPaymentResponse.json())
+        .then(data => {
+          if (this.log) console.log('order response', data);
+          if (data.paytxid) {
+            this.$emit('success', data);
           } else {
-            this.$emit('fail', orderSnData);
+            this.$emit('failed', data);
           }
         })
         .catch(error => {
-          this.$emit('fail', error);
+          this.$emit('failed', data);
           if (this.log) console.log(error);
         });
     },
@@ -128,17 +134,31 @@ export default {
 </script>
 
 <style scoped>
-.dot-wallet-pay-wrapper {
+.autopay-button.default {
+  transform: scale(1);
+  transition-duration: 0.2s;
+}
+.autopay-button.executing {
+  transform: scale(1);
+  transition-duration: 0.2s;
+  opacity: 0.7;
+  cursor: denied;
+}
+.autopay-button.counting {
+  transition-duration: 3s;
+  transform: scale(0.7);
+}
+.dot-wallet-autopay-wrapper {
   width: max-content;
 }
-.dot-wallet-pay-button {
+.autopay-button {
   cursor: pointer;
   box-shadow: 0 0 10px gray;
 }
-.dot-wallet-pay-button:hover {
+.autopay-button:hover {
   box-shadow: 0 0 10px rgb(40, 40, 40);
 }
-.dot-wallet-pay-button:active {
-  opacity: 0.7;
+.autopay-button:active {
+  /* opacity: 0.7; */
 }
 </style>

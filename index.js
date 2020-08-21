@@ -1,8 +1,9 @@
 import Login from './src/components/Login.vue';
 import Pay from './src/components/Pay.vue';
+import AutoPay from './src/components/AutoPay.vue';
 import _vue from 'vue';
 
-const components = [Login, Pay];
+const components = [Login, Pay, AutoPay];
 
 export default {
   install(Vue) {
@@ -15,14 +16,6 @@ export default {
   },
 };
 
-// Login.install = Vue => {
-//   if (!Vue) {
-//     window.Vue = Vue = _Vue;
-//   }
-//   Vue.component(Login.name, Login);
-// };
-
 export { Login as DotwalletLogin };
 export { Pay as DotwalletPay };
-
-// export default Login;
+export { AutoPay as DotwalletAutopay };
