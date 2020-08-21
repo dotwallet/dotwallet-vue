@@ -88,7 +88,7 @@ export default {
         redirect_uri: this.redirectUrl,
         notice_uri: this.noticeUri,
       };
-      if (this.log) console.log('order data', orderData);
+      if (this.log) console.log('order data:\n', orderData);
       const options = {
         method: 'POST',
         body: JSON.stringify(orderData),
@@ -105,12 +105,12 @@ export default {
       }
       if (this.fetchOptions)
         for (const option in this.fetchOptions) options[option] = this.fetchOptions[option];
-      if (this.log) console.log('fetch options', options);
+      if (this.log) console.log('fetch options:\n', options);
 
       fetch(this.apiEndpoint, options)
         .then(orderSnResponse => orderSnResponse.json())
         .then(orderSnData => {
-          if (this.log) console.log('order response data', orderSnData);
+          if (this.log) console.log('order response data:\n', orderSnData);
           if (orderSnData.order_sn) {
             window.location.href = `https://www.ddpurse.com/desktop/open/order?order_sn=${orderSnData.order_sn}`;
             this.$emit('success', orderSnData);
@@ -120,7 +120,7 @@ export default {
         })
         .catch(error => {
           this.$emit('fail', error);
-          if (this.log) console.log(error);
+          if (this.log) console.log('error:\n', error);
         });
     },
   },

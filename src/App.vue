@@ -51,13 +51,13 @@ export default {
   },
   methods: {
     handleStatusChange(status) {
-      console.log('status', status);
+      console.log('status:\n', status);
     },
     handleSuccess(msg) {
-      console.log('handleSuccess', msg);
+      console.log('handleSuccess:\n', msg);
     },
     handleFail(err) {
-      console.log('handleFail', err);
+      console.log('handleFail:\n', err);
     },
   },
 };

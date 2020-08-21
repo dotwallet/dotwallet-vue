@@ -95,7 +95,7 @@ export default {
         pre_amount: parseInt(this.orderAmount, 10),
         user_open_id: this.userOpenId,
       };
-      if (this.log) console.log('order data', orderData);
+      if (this.log) console.log('order data:\n', orderData);
       const options = {
         method: 'POST',
         body: JSON.stringify(orderData),
@@ -117,16 +117,16 @@ export default {
       fetch(this.apiEndpoint, options)
         .then(autoPaymentResponse => autoPaymentResponse.json())
         .then(data => {
-          if (this.log) console.log('order response', data);
+          if (this.log) console.log('order response:\n', data);
           if (data.paytxid) {
             this.$emit('success', data);
           } else {
-            this.$emit('failed', data);
+            this.$emit('fail', data);
           }
         })
         .catch(error => {
-          this.$emit('failed', data);
-          if (this.log) console.log(error);
+          this.$emit('fail', data);
+          if (this.log) console.log('error:\n', error);
         });
     },
   },
@@ -134,26 +134,27 @@ export default {
 </script>
 
 <style scoped>
+.dot-wallet-autopay-wrapper {
+  width: max-content;
+}
+.autopay-button {
+  box-shadow: 0 0 10px gray;
+}
 .autopay-button.default {
+  cursor: pointer;
   transform: scale(1);
   transition-duration: 0.2s;
+}
+.autopay-button.counting {
+  cursor: progress;
+  transition-duration: 3s;
+  transform: scale(0.7);
 }
 .autopay-button.executing {
   transform: scale(1);
   transition-duration: 0.2s;
   opacity: 0.7;
   cursor: denied;
-}
-.autopay-button.counting {
-  transition-duration: 3s;
-  transform: scale(0.7);
-}
-.dot-wallet-autopay-wrapper {
-  width: max-content;
-}
-.autopay-button {
-  cursor: pointer;
-  box-shadow: 0 0 10px gray;
 }
 .autopay-button:hover {
   box-shadow: 0 0 10px rgb(40, 40, 40);
