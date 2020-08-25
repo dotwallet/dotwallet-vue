@@ -10,7 +10,7 @@ Vue components to quickly integrate DotWallet functionality into an app
 npm install dotwallet-vue
 ```
 
-### Use
+## Use
 
 ```js
 // main.js
@@ -128,20 +128,20 @@ export default {
 </style>
 ```
 
-### More details
+## Details
 
 Login, DotwalletPay, and DotwalletAutopay components can all accept a custom slot that could be an image, some text, or even another component.
 
-#### dotwallet-login props
+### dotwallet-login props
 
-| Prop         | Type   | Required | Description                                                                                                                                                                                   |
-| :----------- | :----- | :------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| app-id       | string |   YES    | Your application ID                                                                                                                                                                           |
-| redirect-url | string |   YES    | Where to send the browser after success or failure. Must be valid URL with http:// or https://. Cannot be localhost.                                                                          |
-| lang         | string |    NO    | Language. Default is English. Options: ['en', 'zh']                                                                                                                                           |
-| custom-class | string |    NO    | AS class name for styling the dotwallet button. Note- this only works on the default dotwallet provided button when the slot is empty. If you have something in the slot, this has no effect. |
+| Prop         | Type   | Required | Description                                                                                                                                                                                  |
+| :----------- | :----- | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| app-id       | string |   YES    | Your application ID                                                                                                                                                                          |
+| redirect-url | string |   YES    | Where to send the browser after success or failure. Must be valid URL with http:// or https://. Cannot be localhost.                                                                         |
+| lang         | string |    NO    | Language. Default is English. Options: ['en', 'zh']                                                                                                                                          |
+| custom-class | string |    NO    | A class name for styling the DotWallet button. Note- this only works on the default DotWallet provided button when the slot is empty. If you have something in the slot, this has no effect. |
 
-#### dotwallet-pay props/events
+### dotwallet-pay props/events
 
 | Prop/Event     | Type    | Required | Description                                                                                                                                                                                                                                                         |
 | :------------- | :------ | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -149,9 +149,9 @@ Login, DotwalletPay, and DotwalletAutopay components can all accept a custom slo
 | redirect-url   | string  |   YES    | Where to send the browser after success or failure. Must be valid URL with http:// or https://. Cannot be localhost.                                                                                                                                                |
 | item-name      | string  |   YES    | The item being paid for                                                                                                                                                                                                                                             |
 | order-amount   | string  |   YES    | Order amount in Satoshis. Passed as a string, but must be a valid number over 546.                                                                                                                                                                                  |
-| api-endpoint   | string  |   YES    | Your back-end server's endpoint for recieving and signing payment orders. can be localhost.                                                                                                                                                                         |
+| api-endpoint   | string  |   YES    | Your back-end server's endpoint for receiving and signing payment orders. can be localhost.                                                                                                                                                                         |
 | lang           | string  |    NO    | Language. Default is English. Options: ['en', 'zh']                                                                                                                                                                                                                 |
-| custom-class   | string  |    NO    | AS class name for styling the dotwallet button. Note- this only works on the default dotwallet provided button when the slot is empty. If you have something in the slot, this has no effect.                                                                       |
+| custom-class   | string  |    NO    | A class name for styling the DotWallet button. Note- this only works on the default DotWallet provided button when the slot is empty. If you have something in the slot, this has no effect.                                                                        |
 | notice-uri     | string  |    NO    | Where to send the a notice after success or failure. Must be GET endpoint and a valid URL with http:// or https://. Cannot be localhost.                                                                                                                            |
 | :fetch-headers | object  |    NO    | Used if you need to add some custom headers to the request to your backend.                                                                                                                                                                                         |
 | :fetch-options | object  |    NO    | Used if you need to add some custom options to the request to your backend. Because we use the javascript 'fetch()' for the request, this must be valid fetch options.                                                                                              |
@@ -159,7 +159,7 @@ Login, DotwalletPay, and DotwalletAutopay components can all accept a custom slo
 | @success       | event   |    NO    | The result from the call to your endpoint. If your endpoint directly passes on the data from the call to the DotWallet API, then this event's payload will be the response object from step 1 [here](https://developers.dotwallet.com/en/docs/payment)              |
 | @failure       | event   |    NO    | The result upon failure from the call to your endpoint. If your endpoint directly passes on the data from the call to the DotWallet API, then this event's payload will be the response object from step 1 [here](https://developers.dotwallet.com/en/docs/payment) |
 
-#### dotwallet-autopay props
+### dotwallet-autopay props/events
 
 | Prop/Event                                                                         | Type    | Required | Description                                                                                                                                                                                                                                                                 |
 | :--------------------------------------------------------------------------------- | :------ | :------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -169,9 +169,9 @@ Login, DotwalletPay, and DotwalletAutopay components can all accept a custom slo
 | order-amount                                                                       | string  |   YES    |
 | Order amount in satoshis. Passed as a string, but must be a valid number over 700. |
 | duration                                                                           | string  |   YES    | To protect users, autopay will only trigger after a set number of seconds. Passed as a string, but must be a valid number. Default = '3'                                                                                                                                    |
-| api-endpoint                                                                       | string  |   YES    | Your back-end server's endpoint for recieving and signing payment orders. can be localhost.                                                                                                                                                                                 |
+| api-endpoint                                                                       | string  |   YES    | Your back-end server's endpoint for receiving autopayment orders. can be localhost.                                                                                                                                                                                         |
 | lang                                                                               | string  |    NO    | Language. Default is English. Options: ['en', 'zh']                                                                                                                                                                                                                         |
-| custom-class                                                                       | string  |    NO    | AS class name for styling the dotwallet button. Note- this only works on the default dotwallet provided button when the slot is empty. If you have something in the slot, this has no effect.                                                                               |
+| custom-class                                                                       | string  |    NO    | A class name for styling the DotWallet button. Note- this only works on the default DotWallet provided button when the slot is empty. If you have something in the slot, this has no effect.                                                                                |
 | :fetch-headers                                                                     | object  |    NO    | Used if you need to add some custom headers to the request to your backend.                                                                                                                                                                                                 |
 | :fetch-options                                                                     | object  |    NO    | Used if you need to add some custom options to the request to your backend. Because we use the javascript 'fetch()' for the request, this must be valid fetch options.                                                                                                      |
 | :log                                                                               | boolean |    NO    | Whether to console.log() events                                                                                                                                                                                                                                             |
