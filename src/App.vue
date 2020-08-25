@@ -26,7 +26,7 @@
       user-open-id="47ff7d23ba6f06703e29347da4889e5b"
       item-name="bananas"
       order-amount="900"
-      duration="2"
+      duration="0"
       api-endpoint="http://192.168.1.142:3000/create-autopayment"
       :fetch-headers="{ 'API-Key': 'secret' }"
       :fetch-options="{ credentials: 'same-origin' }"
@@ -34,7 +34,8 @@
       @status="handleStatusChange"
       @succes="handleSuccess"
       @fail="handleFail"
-    ></dotwallet-autopay>
+    >
+    </dotwallet-autopay>
   </div>
 </template>
 

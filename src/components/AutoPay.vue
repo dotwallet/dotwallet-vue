@@ -54,7 +54,7 @@ export default {
     },
     duration: {
       type: String,
-      default: 0,
+      default: 3,
       validator: amt => 0 <= parseInt(amt, 10) < 11,
     },
     fetchHeaders: {
@@ -115,7 +115,10 @@ export default {
       if (this.log) console.log('fetch options', options);
 
       fetch(this.apiEndpoint, options)
-        .then(autoPaymentResponse => autoPaymentResponse.json())
+        .then(autoPaymentResponse => {
+          if (this.log) console.log('order response full:\n', autoPaymentResponse);
+          return autoPaymentResponse.json();
+        })
         .then(data => {
           if (this.log) console.log('order response:\n', data);
           if (data.paytxid) {
