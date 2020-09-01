@@ -57,6 +57,14 @@ export default {
       default: 3,
       validator: amt => 0 <= parseInt(amt, 10) < 11,
     },
+    opReturn: {
+      type: String | undefined,
+      default: undefined,
+    },
+    receiveAddress: {
+      type: String | undefined,
+      default: undefined,
+    },
     fetchHeaders: {
       type: Object | undefined,
     },
@@ -95,6 +103,8 @@ export default {
         pre_amount: parseInt(this.orderAmount, 10),
         user_open_id: this.userOpenId,
       };
+      if (this.opReturn) orderData.opreturn = this.opReturn;
+      if (this.receiveAddress) orderData.receive_address = this.receiveAddress;
       if (this.log) console.log('order data:\n', orderData);
       const options = {
         method: 'POST',

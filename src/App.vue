@@ -26,7 +26,7 @@
       user-open-id="47ff7d23ba6f06703e29347da4889e5b"
       item-name="bananas"
       order-amount="900"
-      duration="0"
+      duration="1"
       api-endpoint="http://192.168.1.142:3000/create-autopayment"
       :fetch-headers="{ 'API-Key': 'secret' }"
       :fetch-options="{ credentials: 'same-origin' }"

@@ -53,6 +53,14 @@ export default {
       default: '',
       validator: url => url.includes('http://') || url.includes('https://'),
     },
+    opReturn: {
+      type: String | undefined,
+      default: undefined,
+    },
+    receiveAddress: {
+      type: String | undefined,
+      default: undefined,
+    },
     fetchHeaders: {
       type: Object | undefined,
     },
@@ -86,8 +94,10 @@ export default {
         order_amount: parseInt(this.orderAmount, 10),
         nonce_str: new Date().toString(),
         redirect_uri: this.redirectUrl,
-        notice_uri: this.noticeUri,
       };
+      if (this.noticeUri) orderData.noticeUri = this.noticeUri;
+      if (this.opReturn) orderData.opreturn = this.opReturn;
+      if (this.receiveAddress) orderData.receive_address = this.receiveAddress;
       if (this.log) console.log('order data:\n', orderData);
       const options = {
         method: 'POST',
