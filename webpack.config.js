@@ -32,6 +32,10 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.svg$/,
+        use: ['vue-loader', 'vue-svg-loader'],
+      },
     ],
   },
   resolve: {

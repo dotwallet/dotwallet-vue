@@ -1,18 +1,29 @@
 <template>
   <div @click="pay()" class="dot-wallet-pay-wrapper">
     <slot>
-      <img
+      <pay-button-zh
+        v-if="lang == 'zh'"
         :class="customClass ? customClass : 'dot-wallet-pay-button'"
-        :src="imgSrc"
-        alt="DotWallet Pay"
-      />
+      ></pay-button-zh>
+      <pay-button-eng
+        v-else
+        :class="customClass ? customClass : 'dot-wallet-pay-button'"
+      ></pay-button-eng>
     </slot>
   </div>
 </template>
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
+import PayButtonEng from '../../public/svg/dotwallet-pay-button-blue-138x48-en.svg';
+import PayButtonZh from '../../public/svg/dotwallet-paybutton-blue-152x48-zh.svg';
+import { DOTWALLET_API } from '../config';
+
 export default {
+  components: {
+    PayButtonEng,
+    PayButtonZh,
+  },
   name: 'dotwallet-pay',
   props: {
     lang: {
@@ -20,52 +31,57 @@ export default {
       default: 'en',
       validator: lang => ['en', 'zh'].indexOf(lang) !== -1,
     },
-    itemName: {
+    productName: {
       type: String,
-      default: '',
+      required: true,
       validator: name => name.length > 0,
     },
     orderAmount: {
+      type: Number,
+      required: true,
+      validator: amount => {
+        if (this.coinType == 'BSV' || this.coinType == 'BTC') return amount >= 546;
+        else return true;
+      },
+    },
+    createOrderEndpoint: {
       type: String,
-      default: 0,
-      validator: amt => parseInt(amt, 10) > 546,
-    },
-    appId: {
-      type: String,
-      default: '',
-      validator: id => id.length === 32,
-    },
-    customClass: {
-      type: String | undefined,
-      default: undefined,
-    },
-    noticeUri: {
-      type: String | undefined,
-      default: undefined,
-    },
-    redirectUrl: {
-      type: String,
-      default: '',
+      required: true,
       validator: url => url.includes('http://') || url.includes('https://'),
-    },
-    apiEndpoint: {
-      type: String,
-      default: '',
-      validator: url => url.includes('http://') || url.includes('https://'),
-    },
-    opReturn: {
-      type: String | undefined,
-      default: undefined,
     },
     receiveAddress: {
-      type: String | undefined,
-      default: undefined,
+      type: String,
+      validator: add => 25 < add.length < 36,
+      required: true,
     },
+
+    productDetail: {
+      type: String,
+    },
+    subject: {
+      type: String,
+    },
+    coinType: {
+      type: String,
+      default: 'BSV',
+      validator: type => type == 'BSV' || type == 'BTC' || type == 'ETH',
+    },
+    notifyUrl: {
+      type: String,
+    },
+    redirectUri: {
+      type: String,
+      validator: url => url.includes('http://') || url.includes('https://'),
+    },
+
     fetchHeaders: {
-      type: Object | undefined,
+      type: Object,
     },
     fetchOptions: {
-      type: Object | undefined,
+      type: Object,
+    },
+    customClass: {
+      type: String,
     },
     log: {
       type: Boolean,
@@ -77,27 +93,35 @@ export default {
       mousedown: false,
     };
   },
-  computed: {
-    imgSrc() {
-      if (this.lang === 'zh')
-        return 'https://gateway.pinata.cloud/ipfs/QmPz8h1GYET575Gdujrp7H25fGMkPmyQTHy4ufPGgyyJo3';
-      else
-        return 'https://gateway.pinata.cloud/ipfs/QmSxsQNXCRymA3KKyVheL3dRsz3FE24DC6vRFy3QgXKhKF';
-    },
-  },
   methods: {
     pay() {
+      if (!this.receiveAddress) {
+        if (this.log) console.log('no receive address');
+        return null;
+      }
+      if (!this.notifyUrl && !this.redirectUri) {
+        if (this.log) console.log('must have either notify_url or redirect_uri');
+      }
+
       const orderData = {
-        app_id: this.appId,
-        merchant_order_sn: uuidv4(),
-        item_name: this.itemName,
-        order_amount: parseInt(this.orderAmount, 10),
-        nonce_str: new Date().toString(),
-        redirect_uri: this.redirectUrl,
+        out_order_id: uuidv4(),
+        coin_type: this.coinType,
+        to: [
+          {
+            type: 'address',
+            content: this.receiveAddress,
+            amount: this.orderAmount,
+          },
+        ],
+        product: {
+          id: uuidv4(),
+          name: this.productName,
+          detail: this.productDetail,
+        },
       };
-      if (this.noticeUri) orderData.noticeUri = this.noticeUri;
-      if (this.opReturn) orderData.opreturn = this.opReturn;
-      if (this.receiveAddress) orderData.receive_address = this.receiveAddress;
+      if (this.notifyUrl) orderData.notify_url = this.notifyUrl;
+      if (this.redirectUri) orderData.redirect_uri = this.redirectUri;
+      if (this.subject) orderData.subject = this.subject;
       if (this.log) console.log('order data:\n', orderData);
       const options = {
         method: 'POST',
@@ -106,7 +130,6 @@ export default {
       if (this.fetchHeaders)
         options.headers = {
           ...this.fetchHeaders,
-          'Content-type': 'application/json; charset=UTF-8',
         };
       else {
         options.headers = {
@@ -117,15 +140,15 @@ export default {
         for (const option in this.fetchOptions) options[option] = this.fetchOptions[option];
       if (this.log) console.log('fetch options:\n', options);
 
-      fetch(this.apiEndpoint, options)
-        .then(orderSnResponse => orderSnResponse.json())
-        .then(orderSnData => {
-          if (this.log) console.log('order response data:\n', orderSnData);
-          if (orderSnData.order_sn) {
-            window.location.href = `https://www.ddpurse.com/desktop/open/order?order_sn=${orderSnData.order_sn}`;
-            this.$emit('success', orderSnData);
+      fetch(this.createOrderEndpoint, options)
+        .then(orderResponse => orderResponse.json())
+        .then(orderData => {
+          if (this.log) console.log('order response data:\n', orderData);
+          if (orderData.order_id) {
+            window.location.href = `${DOTWALLET_API}transact/order/apply_payment?order_id=${orderData.order_id}`;
+            this.$emit('success', orderData);
           } else {
-            this.$emit('fail', orderSnData);
+            this.$emit('fail', orderData);
           }
         })
         .catch(error => {

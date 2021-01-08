@@ -1,50 +1,63 @@
 <template>
   <div @click="openLink()" class="dot-wallet-login-wrapper">
     <slot>
-      <img
+      <login-button-zh
+        v-if="lang == 'zh'"
         :class="customClass ? customClass : 'dot-wallet-login-button'"
-        :src="imgSrc"
-        alt="DotWallet Login"
-      />
+      ></login-button-zh>
+      <login-button-eng
+        v-else
+        :class="customClass ? customClass : 'dot-wallet-login-button'"
+      ></login-button-eng>
     </slot>
   </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
+import { DOTWALLET_API } from '../config';
+import LoginButtonEng from '../../public/svg/dotwallet-login-button-blue-254x48-en.svg';
+import LoginButtonZh from '../../public/svg/dotwallet-loginbutton-blue-152x48-zh.svg';
 export default {
   name: 'dotwallet-login',
+  components: {
+    LoginButtonEng,
+    LoginButtonZh,
+  },
   props: {
     lang: {
       type: String,
       default: 'en',
       validator: lang => ['en', 'zh'].indexOf(lang) !== -1,
     },
-    appId: {
+    clientId: {
       type: String,
       default: '',
       validator: id => id.length === 32,
     },
-    redirectUrl: {
+    redirectUri: {
       type: String,
       default: '',
       validator: url => url.includes('http://') || url.includes('https://'),
+    },
+    scope: {
+      type: String,
+      default: 'user.info',
     },
     customClass: {
       type: String | undefined,
       default: undefined,
     },
   },
-  computed: {
-    imgSrc() {
-      if (this.lang === 'zh')
-        return 'https://gateway.pinata.cloud/ipfs/QmbdwijHk8Ts3RLyL7WcQd2vS59TNj9g19e85AXKbERZsN';
-      else
-        return 'https://gateway.pinata.cloud/ipfs/QmYtzviCMz5juvHjGXYUHERdZQKryuvMTSSoNhGTAVkwHk';
-    },
-  },
   methods: {
     openLink: function() {
-      window.location.href = `https://www.ddpurse.com/openapi/get_code?app_id=${this.appId}&redirect_uri=${this.redirectUrl}`;
+      const scope = encodeURIComponent(this.scope);
+      const redirectURI = encodeURIComponent(this.redirectUri);
+      const loginState = uuidv4();
+      localStorage.setItem('dotwalletLoginState', loginState);
+      localStorage.setItem('dotwalletLoginRedirectUri', this.redirectUri);
+      const url = `${DOTWALLET_API}oauth2/authorize?client_id=${this.clientId}&redirect_uri=${redirectURI}&response_type=code&state=${loginState}&scope=${scope}`;
+      window.location.href = url;
     },
   },
 };
