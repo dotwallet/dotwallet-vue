@@ -8,5 +8,5 @@ export const DOTWALLET_CLIENT =
     ? 'https://prerelease.ddpurse.com'
     : `https://ddpurse.com`;
 export const YOUR_SERVER_URL = 'http://192.168.1.112:3333/';
-export const PAGE_URL = 'http://0.0.0.0:8080/';
+export const YOUR_PAGE_URL = 'http://0.0.0.0:8080/';
 export const DEV_WALLET_ADDRESS = '1L4eTJidJjVajv4caJkmQyTFRXBnoN4Pap';

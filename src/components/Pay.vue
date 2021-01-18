@@ -2,7 +2,7 @@
   <div @click="pay()" class="dot-wallet-pay-wrapper">
     <slot>
       <pay-button-zh
-        v-if="lang == 'zh'"
+        v-if="lang === 'zh'"
         :class="customClass ? customClass : 'dot-wallet-pay-button'"
       ></pay-button-zh>
       <pay-button-eng
@@ -29,29 +29,29 @@ export default {
     lang: {
       type: String,
       default: 'en',
-      validator: lang => ['en', 'zh'].indexOf(lang) !== -1,
+      validator: (lang) => ['en', 'zh'].indexOf(lang) !== -1,
     },
     productName: {
       type: String,
       required: true,
-      validator: name => name.length > 0,
+      validator: (name) => name.length > 0,
     },
     orderAmount: {
       type: Number,
       required: true,
-      validator: amount => {
-        if (this.coinType == 'BSV' || this.coinType == 'BTC') return amount >= 546;
+      validator: (amount) => {
+        if (this.coinType === 'BSV' || this.coinType === 'BTC') return amount >= 546;
         else return true;
       },
     },
     createOrderEndpoint: {
       type: String,
       required: true,
-      validator: url => url.includes('http://') || url.includes('https://'),
+      validator: (url) => url.includes('http://') || url.includes('https://'),
     },
     receiveAddress: {
       type: String,
-      validator: add => 25 < add.length < 36,
+      validator: (add) => 25 < add.length < 36,
       required: true,
     },
 
@@ -64,14 +64,14 @@ export default {
     coinType: {
       type: String,
       default: 'BSV',
-      validator: type => type == 'BSV' || type == 'BTC' || type == 'ETH',
+      validator: (type) => type === 'BSV' || type === 'BTC' || type === 'ETH',
     },
     notifyUrl: {
       type: String,
     },
     redirectUri: {
       type: String,
-      validator: url => url.includes('http://') || url.includes('https://'),
+      validator: (url) => url.includes('http://') || url.includes('https://'),
     },
 
     fetchHeaders: {
@@ -87,6 +87,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  mounted() {
+    if (!this.notifyUrl && !this.redirectUri) {
+      console.log('notify-url and redirect-uri cannot both be empty');
+    }
   },
   data() {
     return {
@@ -141,8 +146,8 @@ export default {
       if (this.log) console.log('fetch options:\n', options);
 
       fetch(this.createOrderEndpoint, options)
-        .then(orderResponse => orderResponse.json())
-        .then(orderData => {
+        .then((orderResponse) => orderResponse.json())
+        .then((orderData) => {
           if (this.log) console.log('order response data:\n', orderData);
           if (orderData.order_id) {
             window.location.href = `${DOTWALLET_API}transact/order/apply_payment?order_id=${orderData.order_id}`;
@@ -151,7 +156,7 @@ export default {
             this.$emit('fail', orderData);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$emit('fail', error);
           if (this.log) console.log('error:\n', error);
         });

@@ -56,12 +56,12 @@ export default {
     lang: {
       type: String,
       default: 'en',
-      validator: lang => ['en', 'zh'].indexOf(lang) !== -1,
+      validator: (lang) => ['en', 'zh'].indexOf(lang) !== -1,
     },
     productName: {
       type: String,
       required: true,
-      validator: name => name.length > 0,
+      validator: (name) => name.length > 0,
     },
     orderAmount: {
       type: Number,
@@ -70,7 +70,7 @@ export default {
     userId: {
       type: String,
       required: true,
-      validator: id => id.length === 32,
+      validator: (id) => id.length === 32,
     },
     customClass: {
       type: String,
@@ -78,12 +78,12 @@ export default {
     autopayEndpoint: {
       type: String,
       required: true,
-      validator: url => url.includes('http://') || url.includes('https://'),
+      validator: (url) => url.includes('http://') || url.includes('https://'),
     },
     duration: {
       type: Number,
       default: 3,
-      validator: amt => 0 <= amt <= 10,
+      validator: (amt) => 0 <= amt <= 10,
     },
     receiveAddress: {
       type: String,
@@ -97,7 +97,7 @@ export default {
     coinType: {
       type: String,
       default: 'BSV',
-      validator: type => type == 'BSV' || type == 'BTC' || type == 'ETH',
+      validator: (type) => type === 'BSV' || type === 'BTC' || type === 'ETH',
     },
     notifyUrl: {
       type: String,
@@ -130,7 +130,7 @@ export default {
       this.status = 'executing';
       clearTimeout(this.timer);
 
-      setTimeout(_ => {
+      setTimeout((_) => {
         try {
           this.pay();
         } catch (error) {
@@ -172,8 +172,8 @@ export default {
       // if data prop exists, and orderAmount is not zero, and receiveAddress is not empty, then add an extra 'to' object.
       if (!this.data) {
         if (
-          (this.coinType == 'BSV' && this.orderAmount < 540) ||
-          (this.coinType == 'BTC' && this.orderAmount < 540)
+          (this.coinType === 'BSV' && this.orderAmount < 540) ||
+          (this.coinType === 'BTC' && this.orderAmount < 540)
         ) {
           if (this.log)
             console.log('order amount cannot be under 540 except for saving data and scripts');
@@ -187,7 +187,7 @@ export default {
         }
       } else {
         if (this.coinType !== 'BSV') {
-          console.log('data transactions are onnly available with BSV');
+          console.log('data transactions are only available with BSV');
 
           return null;
         }
@@ -261,8 +261,8 @@ export default {
       if (this.log) console.log('fetch options', options);
 
       fetch(this.autopayEndpoint, options)
-        .then(autoPaymentResponse => autoPaymentResponse.json())
-        .then(data => {
+        .then((autoPaymentResponse) => autoPaymentResponse.json())
+        .then((data) => {
           if (this.log) console.log('order response:\n', data);
           if (data.txid) {
             this.$emit('success', data);
@@ -270,7 +270,7 @@ export default {
             this.$emit('fail', data);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.$emit('fail', data);
           if (this.log) console.log('error:\n', error);
         });

@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <!-- Simple use exmaples with only required fields -->
+    <!-- Simple use examples with only required fields -->
     <dotwallet-login
       client-id="89d001043806644fdb4fb14099ff6be5"
       scope="user.info autopay.bsv"
-      :redirect-uri="PAGE_URL"
+      :redirect-uri="YOUR_PAGE_URL"
     ></dotwallet-login>
 
     <dotwallet-login-redirect
@@ -17,7 +17,8 @@
       :order-amount="900"
       :receive-address="DEV_WALLET_ADDRESS"
       :create-order-endpoint="YOUR_SERVER_URL + 'create-order'"
-      :redirect-uri="PAGE_URL"
+      :redirect-uri="YOUR_PAGE_URL"
+      :log="true"
     ></dotwallet-pay>
 
     <dotwallet-autopay
@@ -34,8 +35,8 @@
       lang="zh"
       client-id="89d001043806644fdb4fb14099ff6be5"
       scope="user.info autopay.bsv autopay.eth autopay.btc"
-      :redirect-uri="PAGE_URL"
-      customClass="my-override-class"
+      :redirect-uri="YOUR_PAGE_URL"
+      custom-class="my-override-class"
       :log="true"
     ></dotwallet-login>
 
@@ -49,57 +50,62 @@
     ></dotwallet-login-redirect>
 
     <dotwallet-pay
-      lang="zh"
-      :redirect-uri="PAGE_URL"
+      :redirect-uri="YOUR_PAGE_URL"
+      :order-amount="900"
+      :create-order-endpoint="YOUR_SERVER_URL + 'create-order'"
       :receive-address="DEV_WALLET_ADDRESS"
+      lang="zh"
       product-name="bananas"
       product-detail="5 large bananas"
       subject="bananas from the corner store"
-      :order-amount="900"
-      :create-order-endpoint="YOUR_SERVER_URL + 'create-order'"
+      coin-type="BSV"
       :notify-url="YOUR_SERVER_URL + 'payment-result'"
       :fetch-headers="{ 'API-Key': 'secret' }"
       :fetch-options="{ credentials: 'same-origin' }"
-      customClass="my-override-class"
+      custom-class="my-override-class"
       @success="handleSuccess"
       @fail="handleFail"
       :log="true"
-    ></dotwallet-pay>
+      >CUSTOM ORDER -- order pay</dotwallet-pay
+    >
 
     <dotwallet-autopay
-      lang="zh"
       :receive-address="DEV_WALLET_ADDRESS"
       user-id="47ff7d23ba6f06703e29347da4889e5b"
       product-name="bananas"
       product-detail="5 large bananas"
       subject="bananas from the corner store"
       :order-amount="900"
+      coin-type="BSV"
       :duration="1"
       :autopay-endpoint="YOUR_SERVER_URL + 'autopay'"
       :notify-url="YOUR_SERVER_URL + 'payment-result'"
+      lang="zh"
       :fetch-headers="{ 'API-Key': 'secret' }"
       :fetch-options="{ credentials: 'same-origin' }"
-      customClass="my-override-class"
+      custom-class="my-override-class"
       @status="handleStatusChange"
       @success="handleSuccess"
       @fail="handleFail"
       :log="true"
-    ></dotwallet-autopay>
+    >
+      CUSTOM SLOT -- autopay</dotwallet-autopay
+    >
 
     <!-- Save data -->
     <input :v-model="saveData" type="text" />
 
     <dotwallet-autopay
+      :duration="1"
       user-id="47ff7d23ba6f06703e29347da4889e5b"
       product-name="banana data"
       :autopay-endpoint="YOUR_SERVER_URL + 'autopay'"
+      @success="handleSuccess"
       :data="{
         input: saveData,
       }"
-      @status="handleStatusChange"
-      @success="handleSuccess"
     >
-      SAVE DATA
+      <button class="my-override-class"><p>SAVE DATA</p></button>
     </dotwallet-autopay>
 
     <!-- Save data attached to a transaction -->
@@ -109,11 +115,10 @@
       product-name="banana payment and data"
       :order-amount="900"
       :autopay-endpoint="YOUR_SERVER_URL + 'autopay'"
+      @success="handleSuccess"
       :data="{
         input: saveData,
       }"
-      @status="handleStatusChange"
-      @success="handleSuccess"
     >
       SAVE DATA ALONGSIDE TRANSACTION
     </dotwallet-autopay>
@@ -122,13 +127,14 @@
 
     <dotwallet-autopay
       :toggle-pay="togglePay"
-      style="display:none"
+      style="display: none"
       product-name="bananas"
       :order-amount="900"
       :receive-address="DEV_WALLET_ADDRESS"
       :autopay-endpoint="YOUR_SERVER_URL + 'autopay'"
       @status="handleStatusChange"
       @success="handleSuccess"
+      :log="true"
       user-id="47ff7d23ba6f06703e29347da4889e5b"
     ></dotwallet-autopay>
     <button @click="togglePay = !togglePay">toggle hidden payment button</button>
@@ -140,12 +146,12 @@ import Login from './components/Login';
 import LoginRedirect from './components/LoginRedirect';
 import Pay from './components/Pay';
 import AutoPay from './components/AutoPay';
-import { YOUR_SERVER_URL, PAGE_URL, DEV_WALLET_ADDRESS } from './config';
+import { YOUR_SERVER_URL, YOUR_PAGE_URL, DEV_WALLET_ADDRESS } from './config';
 export default {
   name: 'app',
   data() {
     return {
-      PAGE_URL,
+      YOUR_PAGE_URL,
       YOUR_SERVER_URL,
       DEV_WALLET_ADDRESS,
       togglePay: false,
@@ -159,22 +165,25 @@ export default {
     DotwalletAutopay: AutoPay,
   },
   methods: {
-    handleStatusChange(status) {
-      console.log('status:\n', status);
-    },
     handleSuccess(msg) {
       alert('success: \n' + JSON.stringify(msg));
       console.log('handleSuccess:\n', msg);
     },
+    handleFail(err) {
+      alert('failed: \n' + JSON.stringify(err));
+      console.log('handleFail:\n', err);
+    },
+
+    // only for autopay button
+    handleStatusChange(status) {
+      console.log('status:\n', status);
+    },
+    // only for authcallback
     handleAuthSuccess(authInfo) {
       // your auth server will return the user_auth_token info and/or the user info.
       console.log('auth info', authInfo);
       // You'll probably want to save it somewhere:
       // store.commit('saveAuthInfo', authInfo)
-    },
-    handleFail(err) {
-      alert('failed: \n' + JSON.stringify(err));
-      console.log('handleFail:\n', err);
     },
   },
 };
@@ -185,6 +194,7 @@ export default {
   box-shadow: 0 0 10px purple;
   cursor: grab;
 }
+/* for different autopay button status's */
 .my-override-class.counting {
   box-shadow: 0 0 10px yellow;
   cursor: grabbing;

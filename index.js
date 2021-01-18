@@ -1,9 +1,10 @@
 import Login from './src/components/Login.vue';
 import Pay from './src/components/Pay.vue';
 import AutoPay from './src/components/AutoPay.vue';
+import LoginRedirect from './src/components/LoginRedirect.vue';
 import _vue from 'vue';
 
-const components = [Login, Pay, AutoPay];
+const components = [Login, Pay, AutoPay, LoginRedirect];
 
 export default {
   install(Vue) {
@@ -19,3 +20,4 @@ export default {
 export { Login as DotwalletLogin };
 export { Pay as DotwalletPay };
 export { AutoPay as DotwalletAutopay };
+export { LoginRedirect as DotwalletLoginRedirect };
