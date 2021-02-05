@@ -88,11 +88,7 @@ export default {
       default: false,
     },
   },
-  mounted() {
-    if (!this.notifyUrl && !this.redirectUri) {
-      console.log('notify-url and redirect-uri cannot both be empty');
-    }
-  },
+
   data() {
     return {
       mousedown: false,

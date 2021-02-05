@@ -10,3 +10,4 @@ export const DOTWALLET_CLIENT =
 export const YOUR_SERVER_URL = 'http://192.168.1.112:3333/';
 export const YOUR_PAGE_URL = 'http://0.0.0.0:8080/';
 export const DEV_WALLET_ADDRESS = '1L4eTJidJjVajv4caJkmQyTFRXBnoN4Pap';
+export const DEV_USER_ID = '47ff7d23ba6f06703e29347da4889e5b';

@@ -26,7 +26,7 @@
       :order-amount="900"
       :receive-address="DEV_WALLET_ADDRESS"
       :autopay-endpoint="YOUR_SERVER_URL + 'autopay'"
-      user-id="47ff7d23ba6f06703e29347da4889e5b"
+      :user-id="DEV_USER_ID"
     ></dotwallet-autopay>
 
     <!-- Kitchen sink examples -->
@@ -71,7 +71,7 @@
 
     <dotwallet-autopay
       :receive-address="DEV_WALLET_ADDRESS"
-      user-id="47ff7d23ba6f06703e29347da4889e5b"
+      :user-id="DEV_USER_ID"
       product-name="bananas"
       product-detail="5 large bananas"
       subject="bananas from the corner store"
@@ -97,7 +97,7 @@
 
     <dotwallet-autopay
       :duration="1"
-      user-id="47ff7d23ba6f06703e29347da4889e5b"
+      :user-id="DEV_USER_ID"
       product-name="banana data"
       :autopay-endpoint="YOUR_SERVER_URL + 'autopay'"
       @success="handleSuccess"
@@ -135,7 +135,7 @@
       @status="handleStatusChange"
       @success="handleSuccess"
       :log="true"
-      user-id="47ff7d23ba6f06703e29347da4889e5b"
+      :user-id="DEV_USER_ID"
     ></dotwallet-autopay>
     <button @click="togglePay = !togglePay">toggle hidden payment button</button>
   </div>
@@ -146,7 +146,7 @@ import Login from './components/Login';
 import LoginRedirect from './components/LoginRedirect';
 import Pay from './components/Pay';
 import AutoPay from './components/AutoPay';
-import { YOUR_SERVER_URL, YOUR_PAGE_URL, DEV_WALLET_ADDRESS } from './config';
+import { YOUR_SERVER_URL, YOUR_PAGE_URL, DEV_WALLET_ADDRESS, DEV_USER_ID } from './config';
 export default {
   name: 'app',
   data() {
@@ -154,6 +154,7 @@ export default {
       YOUR_PAGE_URL,
       YOUR_SERVER_URL,
       DEV_WALLET_ADDRESS,
+      DEV_USER_ID,
       togglePay: false,
       saveData: '',
     };
