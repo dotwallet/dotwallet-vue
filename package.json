@@ -1,5 +1,5 @@
 {
-  "name": "dotwallet-vue",
+  "name": "@dotwallet/vue",
   "version": "2.0.0",
   "description": "Vue components to quickly integrate DotWallet functionality into an app",
   "author": "dotwallet team",
@@ -12,7 +12,8 @@
   "homepage": "https://github.com/dotwallet/dotwallet-vue#readme",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot --host 0.0.0.0",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "pub": "yarn publish --access=public"
   },
   "dependencies": {
     "buffer": "^6.0.3",
