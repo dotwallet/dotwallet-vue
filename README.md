@@ -218,7 +218,7 @@ export default {
 ## Usage Details
 
 DotwalletLogin, DotwalletPay, and DotwalletAutopay components can all accept a custom slot that could be an image, some text, or even another component.
-You must have a backend server set up that can receive POST requests. Examples of such a server can be found [here](https://github.com/dotwallet/js-examples/blob/master/simple-store/src/index.js).
+You must have a backend server set up that can receive POST requests. Examples of such a server can be found [here](https://github.com/dotwallet/js-examples/blob/master/pure-js/src/index.js).
 dotwallet-vue is also set to work perfectly with [dotwallet-node](https://github.com/dotwallet/dotwallet-node)
 
 ### dotwallet-login
